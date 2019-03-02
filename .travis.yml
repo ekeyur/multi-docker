@@ -1,0 +1,23 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t ekeyur/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run ekeyur/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t ekeyur/multi-client ./client
+  - docker build -t ekeyur/multi-server ./server
+  - docker build -t ekeyur/multi-nginx ./nginx
+  - docker build -t ekeyur/mult-worker ./worker
+# Log in to the docker cli
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+# Take those images and push them to docker hub
+  - docker push ekeyur/multi-client
+  - docker push ekeyur/multi-server
+  - docker push ekeyur/multi-nginx
+  - docker push ekeyur/multi-worker
+
