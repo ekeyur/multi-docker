@@ -1,0 +1,35 @@
+{
+  "AWSEBDockerrunVersion" : 2,
+  "containerDefintitions" : [
+    {
+      "name" : "client",
+      "image" : "ekeyur/multi-client",
+      "hostname" : "client",
+      "essential": false
+    },
+    {
+      "name" : "server",
+      "image" : "ekeyur/multi-server",
+      "hostname" : "api",
+      "essential": false
+    },
+    {
+      "name" : "worker",
+      "image" : "ekeyur/multi-worker",
+      "hostname" : "worker",
+      "essential": false
+    },
+    {
+      "name" : "nginx",
+      "image" : "ekeyur/multi-inginx",
+      "essential": true,
+      "portMappings": [
+        {
+          "hostPort":80,
+          "containerPort":80
+        }
+      ],
+      "links": ["client", "server"]
+    }
+  ]
+}
